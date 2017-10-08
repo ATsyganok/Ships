@@ -1,7 +1,7 @@
 package com.atsyganok.creater.impl;
 
 import com.atsyganok.creater.Creator;
-import com.atsyganok.thread.*;
+import com.atsyganok.object.*;
 
 public class DockCreatorImpl implements Creator {
 
@@ -9,15 +9,15 @@ public class DockCreatorImpl implements Creator {
 
     @Override
     public void create(int i) {
-        dockArray=new Dock[i];
-        for(int n=0;n<dockArray.length;++n)
-            dockArray[n]=new Dock("dock_"+n);
+        dockArray = new Dock[i];
+        for (int n = 0; n < dockArray.length; ++n)
+            dockArray[n] = new Dock("dock_" + n);
         paintDocks();
     }
 
-    private void paintDocks(){
-        for(Dock d:this.dockArray){
-            System.out.println(d.toString()+" created");
+    private void paintDocks() {
+        for (Dock d : this.dockArray) {
+            System.out.println(d.toString() + " created");
         }
     }
 
@@ -25,4 +25,8 @@ public class DockCreatorImpl implements Creator {
         return dockArray;
     }
 
+    @Override
+    public Object[] getArray() {
+        return dockArray;
+    }
 }

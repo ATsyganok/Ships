@@ -1,12 +1,17 @@
-package com.atsyganok.object;
+package com.atsyganok.thread;
 
-import com.atsyganok.thread.*;
+import com.atsyganok.object.*;
 
+import java.util.Arrays;
+
+/**
+ * Created by Андрей on 18.04.2016.
+ */
 public class Ship extends Thread {
     private volatile int capacity;
     private Dock[] dockArray;
 
-    public Ship(int capacity, Dock[] dockArray){
+    public Ship(int capacity,Dock[] dockArray){
         this.capacity=capacity;
         this.dockArray=dockArray;
     }
@@ -34,34 +39,34 @@ public class Ship extends Thread {
         enterDoc(freeDock());  // enter to dock for unload
     }
 
-    private void messageStart(Ship Ship){
-        System.out.println("ship "+ Ship.getId()+" near of the docks");
+    private void messageStart(Ship ship){
+        System.out.println("ship "+ship.getId()+" near of the docks");
     }
 
-    private void messageBussy(Ship Ship,Dock Dock){
-        System.out.println("all docks are busy ship " + Ship.getId() + " wait... for "+ Dock.getName()+" it lenght: "+ Dock.getCurrentLenght());
+    private void messageBussy(Ship ship,Dock dock){
+        System.out.println("all docks are busy ship " + ship.getId() + " wait... for "+dock.getName()+" it lenght: "+dock.getCurrentLenght());
     }
 
-    private void setWait(Dock Dock,Ship Ship){
-        messageBussy(Ship, Dock);
-        Dock.setCurrentLenght(Dock.getCurrentLenght()+ Ship.capacity); //change the dock line
+    private void setWait(Dock dock,Ship ship){
+        messageBussy(ship,dock);
+        dock.setCurrentLenght(dock.getCurrentLenght()+ship.capacity); //change the dock line
         try {
-            synchronized (Dock) {
-                Dock.wait();
+            synchronized (dock) {
+                dock.wait();
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
-    private void enterDoc(Dock Dock){
-        Dock.setReady(false);
-        System.out.println("Ship: "+this.getId()+" went on unloading to "+ Dock.getName());
-        Dock.unloading(this);
+    private void enterDoc(Dock dock){
+        dock.setReady(false);
+        System.out.println("Ship: "+this.getId()+" went on unloading to "+dock.getName());
+        dock.unloading(this);
     }
 
     private Boolean dockStatus(){    // check which dock is free
         for(int n=0;n<dockArray.length;++n){
-            if(dockArray[n].isReady()==true)
+            if(dockArray[n].isReady())
                 return true;
         }
         return false;
@@ -80,6 +85,10 @@ public class Ship extends Thread {
         return minDock;
     }
 
+    private int summ(int a,int b){
+        return a+b;
+    }
+
     private Dock freeDock(){
         for(Dock d:dockArray){
             if(d.isReady())
@@ -90,6 +99,6 @@ public class Ship extends Thread {
 
     @Override
     public String toString(){
-        return "Ship: "+this.getId()+" Box: "+this.capacity;
+        return "Ship: "+this.getId()+" Box: "+this.capacity +" docks "+ Arrays.toString(dockArray);
     }
 }
